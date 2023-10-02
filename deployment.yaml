@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplevideoapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: simplevideoapp
+  template:
+    metadata:
+      labels:
+        app: simplevideoapp
+    spec:
+      containers:
+        - name: simplevideoapp
+          image: gcr.io/s222475715sit72210hd/simplevideoapp:latest
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: "100m"  # Requesting 100 milliCPU units
+            limits:
+              cpu: "500m"  # Limiting to 500 milliCPU units
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: simplevideoapp-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: simplevideoapp
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 30
