@@ -4,14 +4,14 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/s222475715sit72210hd/simplevideoapp:9'
+      - 'gcr.io/s222475715sit72210hd/simplevideoapp:10'
       - '.'
 
   # Push container image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/s222475715sit72210hd/simplevideoapp:9'
+      - 'gcr.io/s222475715sit72210hd/simplevideoapp:10'
   
   # Deploy container image to GKE and delete existing pods
   - name: "gcr.io/cloud-builders/gke-deploy"
